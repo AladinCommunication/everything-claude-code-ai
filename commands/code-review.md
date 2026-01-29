@@ -61,16 +61,13 @@ If the directory does not exist, create it.
     "type": "object",
     "additionalProperties": false,
     "properties": {
-          "generated_at": {
-            "type": "string",
-            "description": "ISO-8601 timestamp when the report was generated. e.g., 2026-01-29T16:20:00+09:00"
-          },
-          "schema_version": {
-            "type": "string",
-            "description": "Schema version for report compatibility. e.g., 1.0.0"
-          }
-        },
-        "required": ["generated_at", "schema_version"]
+      "generated_at": {
+        "type": "string",
+        "description": "ISO-8601 timestamp when the report was generated, including timezone (KST is UTC+09:00). e.g., 2026-01-29T16:20:00+09:00"        
+      },
+      "schema_version": {
+        "type": "string",
+        "description": "Schema version for report compatibility. e.g., 1.0.0"
       },
       "summary": {
         "type": "object",
@@ -89,7 +86,10 @@ If the directory does not exist, create it.
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+            "severity": {
+              "type": "string",
+              "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+            },
             "file": { "type": "string" },
             "line": { "type": "integer" },
             "issue": { "type": "string" },
@@ -99,9 +99,10 @@ If the directory does not exist, create it.
         }
       }
     },
-    "required": ["summary", "findings"]
+    "required": ["generated_at", "schema_version", "summary", "findings"]
   },
   "strict": true
 }
+
 
 
