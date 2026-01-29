@@ -61,6 +61,26 @@ If the directory does not exist, create it.
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "meta": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$",
+            "description": "Git commit SHA (HEAD) that this review report was generated for."
+          },
+          "generated_at": {
+            "type": "string",
+            "description": "ISO-8601 timestamp when the report was generated. e.g., 2026-01-29T16:20:00+09:00"
+          },
+          "schema_version": {
+            "type": "string",
+            "description": "Schema version for report compatibility. e.g., 1.0.0"
+          }
+        },
+        "required": ["commit", "generated_at", "schema_version"]
+      },
       "summary": {
         "type": "object",
         "additionalProperties": false,
@@ -70,7 +90,7 @@ If the directory does not exist, create it.
           "medium": { "type": "integer" },
           "low": { "type": "integer" }
         },
-        "required": ["critical","high","medium","low"]
+        "required": ["critical", "high", "medium", "low"]
       },
       "findings": {
         "type": "array",
@@ -78,18 +98,19 @@ If the directory does not exist, create it.
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "severity": { "type": "string", "enum": ["CRITICAL","HIGH","MEDIUM","LOW"] },
+            "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
             "file": { "type": "string" },
             "line": { "type": "integer" },
             "issue": { "type": "string" },
             "fix": { "type": "string" }
           },
-          "required": ["severity","file","line","issue","fix"]
+          "required": ["severity", "file", "line", "issue", "fix"]
         }
       }
     },
-    "required": ["summary","findings"]
+    "required": ["meta", "summary", "findings"]
   },
   "strict": true
 }
+
 
