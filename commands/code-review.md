@@ -38,3 +38,58 @@ Comprehensive security and quality review of uncommitted changes:
 4. Block commit if CRITICAL or HIGH issues found
 
 Never approve code with security vulnerabilities!
+
+## Output Format (MANDATORY)
+
+You MUST:
+
+1. Produce ONLY valid JSON.
+2. Match exactly the schema below.
+3. Do not include markdown.
+4. Do not include explanations outside JSON.
+5. Save the file to:
+
+.ai/reports/code-review.json
+
+If the directory does not exist, create it.
+
+### JSON Schema
+{
+  "name": "code_review_report",
+  "description": "Return code review findings with severities and counts.",
+  "input_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "summary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "critical": { "type": "integer" },
+          "high": { "type": "integer" },
+          "medium": { "type": "integer" },
+          "low": { "type": "integer" }
+        },
+        "required": ["critical","high","medium","low"]
+      },
+      "findings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "severity": { "type": "string", "enum": ["CRITICAL","HIGH","MEDIUM","LOW"] },
+            "file": { "type": "string" },
+            "line": { "type": "integer" },
+            "issue": { "type": "string" },
+            "fix": { "type": "string" }
+          },
+          "required": ["severity","file","line","issue","fix"]
+        }
+      }
+    },
+    "required": ["summary","findings"]
+  },
+  "strict": true
+}
+
