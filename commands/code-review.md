@@ -1,8 +1,8 @@
 # Code Review
 
-Comprehensive security and quality review of uncommitted changes:
+Comprehensive security and quality review of staged changes (before commit):
 
-1. Get changed files: git diff --name-only HEAD
+1. Get staged files: git diff --cached --name-only
 
 2. For each changed file, check for:
 
