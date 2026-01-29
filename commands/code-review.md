@@ -1,132 +1,95 @@
-⏺ Code Review Complete ✅
+⏺ Code Review
 
-Summary:
-Review code changes on the current working branch by comparing against `origin/dev`.
-Code Review (branch diff vs origin/dev)
-
-You are a strict security and code-quality reviewer.
+You are a strict security & code-quality reviewer.
 Never approve code with security vulnerabilities.
 
 ---
 
-## Scope
+## Scope (Semantic)
 
-- Review all code changes introduced in the **current branch**
-- Base branch is fixed and always:
-  - `origin/dev`
-- Review includes:
-  - Committed changes in this branch (diff vs origin/dev)
-  - Uncommitted local changes (working tree)
+Review the **effective change set** of this work:
 
----
+1) All changes introduced by the **current branch** relative to the team base branch:
+   - Base branch is always: `origin/dev`
 
-## Step 0) Resolve base and identifiers
+2) Plus any **uncommitted working-tree changes** (staged + unstaged).
 
-1) Base branch:
-   - BASE=origin/dev
-
-2) Find merge-base between base and HEAD:
-   - MB=$(git merge-base $BASE HEAD)
-
-3) Get short SHA for current HEAD:
-   - SHA7=$(git rev-parse --short=7 HEAD)
+You must ensure the review covers the complete change set above.
+(How you collect the change set is up to you, but it must be correct.)
 
 ---
 
-## Step 1) Collect changed files
+## How to obtain the change set (Guidance, not mandatory)
 
-1) Files changed in this branch (committed):
-   - git diff --name-only $MB..HEAD
+Use any reliable method to identify:
+- Files changed in this branch vs `origin/dev`
+- Files changed in the working tree
 
-2) Files changed but not yet committed:
-   - git diff --name-only
-
-3) Merge both lists, remove duplicates.
-4) Ignore deleted files unless necessary for security review.
+Example approaches:
+- diff vs merge-base with `origin/dev`
+- diff vs upstream base ref if available
+- any equivalent method that accurately captures “branch vs origin/dev” + “working tree”
 
 ---
 
-## Step 2) Review criteria
+## Review criteria
 
-For each changed file, review the following.
+For each changed file, review:
 
-### 🔴 Security Issues (CRITICAL)
-- Hardcoded credentials, API keys, secrets, tokens
-- SQL injection vulnerabilities
-- XSS vulnerabilities
-- Missing or improper input validation
-- Path traversal vulnerabilities
+### CRITICAL (Security)
+- Hardcoded credentials / secrets
+- SQLi / XSS
+- Missing input validation
+- Path traversal
 - Command injection / SSRF / insecure deserialization
-- Use of insecure or deprecated dependencies
+- Insecure or deprecated dependencies
 
----
+### HIGH (Code Quality)
+- Functions > 50 lines
+- Files > 800 lines
+- Nesting depth > 4
+- Missing error handling (I/O, network, DB)
+- Debug logs left in production paths
+- TODO/FIXME in active code
+- Missing docs for public APIs
 
-### 🟠 Code Quality Issues (HIGH)
-- Functions longer than 50 lines
-- Files longer than 800 lines
-- Nesting depth greater than 4
-- Missing or insufficient error handling
-- Debug logs (console.log / print) left in production paths
-- TODO / FIXME comments in active code
-- Missing documentation for public APIs (JSDoc / docstring)
+### MEDIUM (Best Practices)
+- Unnecessary mutation
+- Missing tests for new/changed logic
+- a11y issues for UI changes
+- Overly complex logic
+- Emoji usage in code/comments
 
----
-
-### 🟡 Best Practice Issues (MEDIUM)
-- Unnecessary mutation (prefer immutable patterns when reasonable)
-- Missing tests for new or changed logic
-- Accessibility (a11y) issues in UI code
-- Overly complex logic that should be decomposed
-- Emoji usage in code or comments
-
----
-
-### 🔵 Minor Issues (LOW)
+### LOW (Minor)
 - Naming consistency
-- Formatting or style inconsistencies
-- Minor refactoring suggestions
+- Formatting/style inconsistencies
+- Minor refactors
 
 ---
 
-## Step 3) Generate report (MANDATORY)
+## Report (MANDATORY)
 
-You MUST:
-
-1) Create directory if it does not exist:
-   - `.ai/reports/`
-
-2) Save the report to:
+1) Ensure directory exists: `.ai/reports/`
+2) Save report to:
    - `.ai/reports/code-review-${SHA7}.md`
+   - Where `SHA7` is the 7-char short SHA of the current HEAD.
+     (If you cannot determine it, use a unique fallback suffix and state why.)
 
-3) The report MUST include:
-   - Current branch name
-   - Base branch: `origin/dev`
-   - Merge-base commit SHA
-   - Current HEAD SHA
-   - Severity sections: CRITICAL / HIGH / MEDIUM / LOW
-   - For each issue:
-     - File path
-     - Line number(s)
-     - Description
-     - Suggested fix
-
-4) If no issues exist for a severity level, explicitly state:
-   - “No issues found”
+Report must include:
+- Current branch name
+- Base branch: `origin/dev`
+- Identifier for the reviewed change set (e.g., merge-base + HEAD, or equivalent)
+- Severity sections: CRITICAL / HIGH / MEDIUM / LOW
+- For each issue: file + line(s) + description + suggested fix
+- If none at a severity: “No issues found”
 
 ---
 
-## Step 4) Review gate (policy declaration)
+## Gate (Policy declaration)
 
-- If **any CRITICAL or HIGH issues** are found:
-  - Mark the review result as: **BLOCK COMMIT**
-  - Clearly explain why
-
-- If **no CRITICAL or HIGH issues** are found:
-  - Mark the review result as: **APPROVE**
-  - Still list MEDIUM / LOW improvements if applicable
-
-This gate is a **policy declaration** for automation (hooks / CI),
-not a Git-enforced rule by itself.
+- If any CRITICAL or HIGH issues exist: **BLOCK COMMIT**
+- Otherwise: **APPROVE**
+(This is a policy for automation, not a Git-enforced rule by itself.)
 
 ---
 
@@ -134,5 +97,4 @@ not a Git-enforced rule by itself.
 
 - Be precise and concise
 - Do not invent issues
-- Do not approve code with security vulnerabilities
 - Prefer correctness over verbosity
