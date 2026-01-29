@@ -5,17 +5,17 @@ Never approve code with security vulnerabilities.
 
 ---
 
-## Scope (Semantic)
+## Scope (Lightweight / Pre-PR)
 
-Review the **effective change set** of this work:
+Review only the **currently relevant local changes** for this working session:
 
-1) All changes introduced by the **current branch** relative to the team base branch:
-   - Base branch is always: `origin/dev`
+- Files modified in the working tree (staged + unstaged)
+- Plus the most recent commits on this branch not yet merged into `origin/dev`
+  (limit review to the recent change set rather than the full branch history)
 
-2) Plus any **uncommitted working-tree changes** (staged + unstaged).
+The goal is to catch obvious security and quality issues early,
+not to fully replace PR-time review.
 
-You must ensure the review covers the complete change set above.
-(How you collect the change set is up to you, but it must be correct.)
 
 ---
 
