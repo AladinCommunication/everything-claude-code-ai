@@ -1,8 +1,8 @@
 # Code Review
 
-Comprehensive security and quality review of staged changes (before commit):
+Comprehensive security and quality review of uncommitted changes:
 
-1. Get staged files: git diff --cached --name-only
+1. Get changed files: git diff --name-only HEAD
 
 2. For each changed file, check for:
 
@@ -61,15 +61,6 @@ If the directory does not exist, create it.
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "meta": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "commit": {
-            "type": "string",
-            "pattern": "^[0-9a-f]{7,40}$",
-            "description": "Git commit SHA (HEAD) that this review report was generated for."
-          },
           "generated_at": {
             "type": "string",
             "description": "ISO-8601 timestamp when the report was generated. e.g., 2026-01-29T16:20:00+09:00"
