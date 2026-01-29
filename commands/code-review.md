@@ -42,67 +42,10 @@ Never approve code with security vulnerabilities!
 ## Output Format (MANDATORY)
 
 You MUST:
-
-1. Produce ONLY valid JSON.
-2. Match exactly the schema below.
-3. Do not include markdown.
-4. Do not include explanations outside JSON.
-5. Save the file to:
-
-.ai/reports/code-review.json
+1. Save the file to: .ai/reports/code-review.md
 
 If the directory does not exist, create it.
 
-### JSON Schema
-{
-  "name": "code_review_report",
-  "description": "Return code review findings with severities and counts.",
-  "input_schema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "generated_at": {
-        "type": "string",
-        "description": "ISO-8601 timestamp when the report was generated, including timezone (KST is UTC+09:00). e.g., 2026-01-29T16:20:00+09:00"        
-      },
-      "schema_version": {
-        "type": "string",
-        "description": "Schema version for report compatibility. e.g., 1.0.0"
-      },
-      "summary": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "critical": { "type": "integer" },
-          "high": { "type": "integer" },
-          "medium": { "type": "integer" },
-          "low": { "type": "integer" }
-        },
-        "required": ["critical", "high", "medium", "low"]
-      },
-      "findings": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "severity": {
-              "type": "string",
-              "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
-            },
-            "file": { "type": "string" },
-            "line": { "type": "integer" },
-            "issue": { "type": "string" },
-            "fix": { "type": "string" }
-          },
-          "required": ["severity", "file", "line", "issue", "fix"]
-        }
-      }
-    },
-    "required": ["generated_at", "schema_version", "summary", "findings"]
-  },
-  "strict": true
-}
 
 
 
