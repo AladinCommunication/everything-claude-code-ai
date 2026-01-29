@@ -70,7 +70,7 @@ If the directory does not exist, create it.
             "description": "Schema version for report compatibility. e.g., 1.0.0"
           }
         },
-        "required": ["commit", "generated_at", "schema_version"]
+        "required": ["generated_at", "schema_version"]
       },
       "summary": {
         "type": "object",
@@ -99,7 +99,7 @@ If the directory does not exist, create it.
         }
       }
     },
-    "required": ["meta", "summary", "findings"]
+    "required": ["summary", "findings"]
   },
   "strict": true
 }
